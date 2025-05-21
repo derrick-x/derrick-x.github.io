@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "Machine Learning: Start"
-permalink: "machine-learning"
+permalink: "/machine-learning/"
 ---
 Welcome to my blog post explaining machine learning!
 At this point, my blog splits into two paths. If you are comfortable with multivariable calculus and linear algebra, take this path:
