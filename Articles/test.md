@@ -1,6 +1,7 @@
 ---
 layout: default
 title: "Quadratic Equation Test"
+permalink: /test/
 ---
 
 Let’s test a math equation using MathJax.

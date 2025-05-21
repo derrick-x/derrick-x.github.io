@@ -1,6 +1,7 @@
 ---
 layout: default
-title: "Quadratic Equation Test"
+title: "Machine Learning: With Math"
+permalink: /machine-learning-math/
 ---
 
 Hello world!

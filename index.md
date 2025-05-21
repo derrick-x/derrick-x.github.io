@@ -2,13 +2,6 @@
 layout: default
 title: "Home"
 ---
-
-## Recent Posts
-
-<ul>
-  {% for post in site.posts %}
-    <li>
-      <a href="{{ post.url }}">{{ post.title }}</a>
-    </li>
-  {% endfor %}
-</ul>
+## Posts
+- [Quadratic Equation Test](/test/)
+- [Machine Learning: With Math](/machine-learning-math/)
