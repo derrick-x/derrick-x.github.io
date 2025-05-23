@@ -12,6 +12,5 @@ But things become a little trickier when we don't really know the steps. Let's t
 # Introduction to Machine Learning
 In this blog, I will first explain neural networks, the data structure that really defied algorithms really sparked machine learning. Then, I will explain backpropagation - the algorithm that allows AI to "learn" from training data. Finally, I will explain transformers - the core that powers large language models such as ChatGPT.
 At this point, my blog splits into two paths.  
-If you are comfortable with multivariable calculus and linear algebra, take this path:  
-[Machine Learning: With Math](/machine-learning-math/)  
+If you are comfortable with multivariable calculus and linear algebra, take this path: [Machine Learning: With Math](/machine-learning-math/)  
 If you aren't familiar with those math concepts yet and would just like a conceptual understanding of machine learning, take this path:  
