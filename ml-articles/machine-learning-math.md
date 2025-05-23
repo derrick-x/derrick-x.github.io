@@ -21,9 +21,7 @@ You might be wondering why we use multiple layers. The idea behind the neural ne
 *"Machine learning is just multivariable calculus on steroids." - Someone*  
 As I mentioned before, all parameters, meaning the weights and biases, are initialized to random values. As you would expect, a newborn neural net would not make very accrurate predictions - it is literally blind guessing. We want a way to shift those weights and biases to make the predictions more accurate.  
 The first step is designing a mathematical function to tell the neural net how "badly" it predicted. We call this the cost function. For our example, if we input a vector representation of the handwritten digit 7, we should see the neuron corresponding to 7 be set to 1 and all the others set to 0. We therefore can define the cost function as the mean squared error between the predicted value and expected value. Formally, it is denoted as:
-$$
-\sum_{i=1}^n
-$$
+$$\sum_{i=1}^n$$
 Where $$n$$ is the size of the output layer, $$y_{ip}$$ is the predicted activation of neuron $$i$$, and $$y_{ie}$$ is the expected activation of neuron $$i$$.
 ## Learning Too Much
 # Transformers
