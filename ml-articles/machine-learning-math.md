@@ -28,9 +28,9 @@ Where $$n$$ is the size of the output layer, $$a_l^i$$ is the predicted activati
 To illustrate backpropagation, let's simplify our neural network to just three layers (1 input, 1 hidden, 1 output), with just one neuron in each layer. Since we are temporarily ignoring the presence of multiple neurons in a layer, we do not need the superscript yet.  Focusing on just the last two layers, let's first compute the derivative of the cost function with respect to the activation of the output neuron:  
 $$\frac{\delta C}{\delta a_l}=2(a_l-y)$$
 However, we cannot directly change an activation. We have three ways to induce a change in the activation, thus changing the cost: change the weight of the edge connecting the previous neuron to the output, change the bias applied to the output neuron, or indirectly change the activation of the previous neuron. We can apply the chain rule to compute the derivative of the cost function with respect to each of these variables:  
-$$\frac{\delta C}{\delta w_{l-1}}=2(a_l-y)\frac{\delta a_l}{\delta w_{l-1}}$$
-$$\frac{\delta C}{\delta b_l}=2(a_l-y)\frac{\delta a_l}{\delta b_l}$$
-$$\frac{\delta C}{\delta a_{l-1}}=2(a_l-y)\frac{\delta a_l}{\delta a_{l-1}}$$
+$$\frac{\delta C}{\delta w_{l-1}}=2(a_l-y)\frac{\delta a_l}{\delta w_{l-1}}$$  
+$$\frac{\delta C}{\delta b_l}=2(a_l-y)\frac{\delta a_l}{\delta b_l}$$  
+$$\frac{\delta C}{\delta a_{l-1}}=2(a_l-y)\frac{\delta a_l}{\delta a_{l-1}}$$  
 As you can see, all the derivatives are scaled by how far away the output neuron activation is from the expected value. That implies that changing outputs that were more badly predicted has a greater impact on the cost. This should make sense. Let's compute the derivative of the output neuron activation with respect to the edge weight:  
 $$\frac{\delta a_l}{\delta w_{l-1}}=N'(b_l+a_{l-1}w_{l-1})\frac{\delta}{\delta w_{l-1}}(b_l+a_{l-1}w_{l-1})$$  
 $$=N'(b_l+a_{l-1}w_{l-1})a_{l-1}$$  
