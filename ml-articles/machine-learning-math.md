@@ -6,7 +6,7 @@ permalink: /machine-learning-math/
 # Neural Networks
 Neural networks are the foundation of all machine learning. What makes this network "neural" is its flexibility. A neural net is initialized with random, arbitrary parameters which can be adjusted through a learning process called backpropagation. The edges (represented as lines) connecting every pair of neurons (represented as circles) in adjacent layers allow information to be passed to and interact with each other. In the diagram below, while there are four neurons in the first layer and two neurons in the last layer, the size and number of layers can vary depending on the application.
 
-![Neural Network Diagram](/assets/images/neural_network.png)
+![Neural Network Diagram](/assets/images/neural_network.png)  
 *Image credit: [Victor Zhou – Neural Networks from Scratch](https://victorzhou.com/series/neural-networks-from-scratch/)*
 
 ## Thinking
