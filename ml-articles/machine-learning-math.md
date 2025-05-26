@@ -72,8 +72,8 @@ C'(l, i, j)=
 1,  & \text{if $w_l^{ij} \leq$ 0} \\
 -1, & \text{if $w_l^{ij}$ > 0}
 \end{cases}
-$$
-$$C'(l, i, j)=-2w_l^{ij}$$
+$$  
+$$C'(l, i, j)=-2w_l^{ij}$$  
 You may be wondering why parameter regularization is not applied to biases.
 ### Data Augmentation
 ### Network Complexity
