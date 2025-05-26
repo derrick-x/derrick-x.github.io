@@ -4,8 +4,27 @@ title: "Machine Learning: With Math"
 permalink: /machine-learning-math/
 ---
 # Table of Contents
+- [Neural Networks](#neural-networks)
+    - [Thinking](#thinking)
+        - [Feed-Forward](#feed-forward)
+        - [Multiple Layers](#multiple-layers)
+    - [Learning](#learning)
+        - [Backpropagation](#backpropagation)
+        - [Iterating Backwards](#iterating-backwards)
+    - [Learning Too Much](#learning-too-much)
+        - [Early Stopping](#early-stopping)
+        - [Dropout](#dropout)
+        - [Parameter Regularization](#parameter-regularization)
+        - [Data Augmentation](#data-augmentation)
+        - [Network Complexity](#network-complexity)
+    - [Neural Networks Conclusion](#neural-networks-conclusion)
+- [Transformers](#transformers)
+    - [Words to Numbers](#words-to-numbers)
+    - [Pay Attention](#pay-attention)
+    - [Knowing Facts](#knowing-facts)
+    - [Transformers Conclusion](#transformers-conclusion)
 # Neural Networks
-Neural networks were one of the first examples of machine learning (besides maybe linear regression), and serves as a foundation for most modern models. What makes this data structure "neural" is its flexibility. A neural net is initialized with random, arbitrary parameters which can be adjusted through applying a learning process on training data. The edges (represented as lines) connecting every pair of neurons (represented as circles) in adjacent layers allow information to be passed to and interact with each other. In the diagram below, while there are four neurons in the first layer and two neurons in the last layer, the size and number of layers can vary depending on the application.
+Neural networks were one of the first examples of machine learning (besides maybe linear regression), and serves as a foundation for most modern models. What makes this data structure "neural" is its flexibility. A neural net is initialized with random\*, arbitrary parameters which can be adjusted through applying a learning process on training data. The edges (represented as lines) connecting every pair of neurons (represented as circles) in adjacent layers allow information to be passed to and interact with each other. In the diagram below, while there are four neurons in the first layer and two neurons in the last layer, the size and number of layers can vary depending on the application.
 
 ![Neural Network Diagram](/assets/images/neural_network.png)  
 *Image credit: [Victor Zhou – Neural Networks from Scratch](https://victorzhou.com/series/neural-networks-from-scratch/)*
@@ -20,7 +39,7 @@ Nonlinear functions also bring in more flexibility by breaking properties of lin
 ### Multiple Layers
 We can now repeat this process for the next layers, until we reach the last layer, the output layer. The final values in the output layer determine what the neural net "thinks" about its input. In our case of handrwitten digits, we would use 10 neurons, each with an activation that represents how close the input is to that number. This process is essentially a repeated sequence of a linear transformation, a translation, then a nonlinear normalization function. Here's the full formula for the activation of each neuron:  
 $${a_l}^i=N(b_l^i+\sum_{j=1}^n{a_{l-1}^j}w_{l-1}^{ij})$$  
-Where $${a_l}^i$$ is the activation of neuron $$i$$ in layer $$l$$, $$N$$ is the nonlinear normalization function, $$n$$ is the size of the current layer, $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l+1$$ neuron $$j$$\*, and $$b_l^i$$ is the bias for layer $$l$$ neuron $$i$$. (superscripts here are just indices, not exponents)  
+Where $${a_l}^i$$ is the activation of neuron $$i$$ in layer $$l$$, $$N$$ is the nonlinear normalization function, $$n$$ is the size of the current layer, $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l+1$$ neuron $$j$$\*\*, and $$b_l^i$$ is the bias for layer $$l$$ neuron $$i$$. (superscripts here are just indices, not exponents)  
 You might be wondering why we use multiple layers. The idea behind the neural network is that each layer should recognize some pattern, maybe a straight line or a curve, then recognize compounded patterns in later layers, maybe a loop or intersection. Using nonlinear normalization functions on each layer allows the neural net to focus on these patterns more. I say in theory because the patterns a neural net actually learns is very hard to deduce. There are actually many ways a machine can learn to recognize the number 4, most of which are not recognizable to us.
 ## Learning
 *"Machine learning is just multivariable calculus on steroids." - Someone*  
@@ -53,7 +72,7 @@ $$\frac{\delta C}{\delta a_l^i}=2(a_l^i-y^i)$$
 $$\frac{\delta C}{\delta w_{l-1}^{ij}}=2(a_l^i-y^i)N'(b_l+\sum_{j=1}^{n}a_{l-1}^iw_{l-1}^{ij})a_{l-1}^j$$  
 $$\frac{\delta C}{\delta b_l^i}=2(a_l^i-y^i)N'(b_l^i+\sum_{j=1}^{n}a_{l-1}^iw_{l-1}^{ij})$$  
 $$\frac{\delta C}{\delta a_{l-1}^j}=\sum_{i=1}^{n}2(a_l^i-y^i)N'(b_l^i+\sum_{j=1}^{n}a_{l-1}^iw_{l-1}^{ij})w_{l-1}^{ij}$$  
-The main thing to note here is that for every neuron activation in a layer, its activation will be influenced by every neuron activation in the previous layer, so we need to sum up those derivatives to compute $$\frac{\delta C}{\delta a_{l-1}}$$. For multiple training data points, simply sum all\*\* the gradients together to get the average change to optimally fit all outputs. With the full gradient derivative computed, we now shift every weight and bias by a tiny fraction of its corresponding derivative value. This should inch us slightly closer to a better predictor. After repeating this process over and over on the training data, we should have a pretty solid handwritten digit recognizer.
+The main thing to note here is that for every neuron activation in a layer, its activation will be influenced by every neuron activation in the previous layer, so we need to sum up those derivatives to compute $$\frac{\delta C}{\delta a_{l-1}}$$. For multiple training data points, simply sum all\*\*\* the gradients together to get the average change to optimally fit all outputs. With the full gradient derivative computed, we now shift every weight and bias by a tiny fraction of its corresponding derivative value. This should inch us slightly closer to a better predictor. There's more to say about how parameters get updated for optimal long-term improvement, but after repeating this process over and over on the training data, we should have a pretty solid handwritten digit recognizer.
 ## Memorizing Without Learning
 A problem I encountered when building my own neural network was that while the cost appeared to have decreased to nearly zero, it still did barely better than blind guessing on handwritten digits I drew myself. This problem is called overfitting - where the weights and biases have been adjusted to match the training data perfectly, but performs poorly on new data.
 
@@ -81,12 +100,14 @@ $$\begin{pmatrix}\text{Rand}[0.9,1.1] & \text{Rand}[-0.1,0.1]\\\ \text{Rand}[-0.
 Another way to augment data is adding noise. Noise, which is small random values unrelated to the pattern, is already present in most real-world datasets. Neural nets can sometimes learn the noise patterns rather than the actual patterns in the dataset. To counteract this, we can add artificial noise that changes on each iteration of backpropagation to force the model to learn the true patterns in the dataset. In the case of recognizing handwritten digits, we might randomly increase or decrease the brightness of every pixel by a tiny amount.
 ### Network Complexity
 A neural net without enough parameters may not be able to fit to the patterns in the dataset. On the other hand, a more complex neural net may not be better. Models with too many neurons in each layer or too many layers has too much flexibility to learn excessively complex patterns that aren't related to the training data. In other words, the model has too many parameters to work with and has a greater ability to simply memorize the training data. By adjusting the size and number of layers, the optimal network complexity can be discovered empirically.
-## Neural Network Conclusion
+## Neural Networks Conclusion
 # Transformers
 ## Words to Numbers
 ## Pay Attention
 $$\text{Attention}(q,k,v)=S(\frac{k^Tq}{\sqrt{d_k}})$$
 ## Knowing Facts
 
-*\* While this notation is more intuitive to think about, it may be more convenient to represent the edge as travelling backwards - $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l-1$$ neuron $$j$$ - for the purposes of computation*  
-*\*\* A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss*
+*\*Often, parameters are initialized using controlled random values such as with Kaiming He Initialization, to mitigate the gradient explosion problem*
+*\*\* While this notation is more intuitive to think about, it may be more convenient to represent the edge as travelling backwards - $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l-1$$ neuron $$j$$ - for the purposes of computation*  
+*\*\*\* A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss*
+## Transformers Conclusion
