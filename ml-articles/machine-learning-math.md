@@ -88,5 +88,5 @@ A neural net without enough parameters may not be able to fit to the patterns in
 $$\text{Attention}(q,k,v)=S(\frac{k^Tq}{\sqrt{d_k}})$$
 ## Knowing Facts
 
-*\* While this notation is more intuitive to think about, it may be more convenient to represent the edge as travelling backwards - $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l-1$$ neuron $$j$$ - for the purposes of computation*
+*\* While this notation is more intuitive to think about, it may be more convenient to represent the edge as travelling backwards - $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l-1$$ neuron $$j$$ - for the purposes of computation*  
 *\*\* A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss*
