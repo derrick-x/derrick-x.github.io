@@ -66,11 +66,13 @@ Perhaps the simplest way to reduce overfitting is to stop training before overfi
 Another popular technique is called dropout. During the training process, dropout will randomly select neurons to be deactivated, meaning they won't have their activation passed forward. Common dropout rates for neurons are between 20-50%, though the optimal rate depends on the model and application. Of course, we want to preserve the output activations, and during evaluation of new data, all neurons are active. Dropout prevents the network from being over-reliant on certain neurons and forces the network to learn more robust patterns.
 ### Parameter Regularization
 Parameter Regularization is similar to how dropout tries to make the network less reliant on specific neurons. In this case, we focus on the weights. A well-trained model should not have a few super large weights to encourage generalization. L1 regularization has every edge between neurons contribute the magnitude of its weight (or some multiple of it) to the cost function. L2 regularization has every edge contribute the square of the magnitude of its weight to the cost function, so reducing weights with larger magnitudes are prioritized more in the gradient descent. Often, a combination of L1 and L2 are used to strike an optimal balance of their effects. Since these terms are independent of all the backpropagation calculations, we simply need to add the following terms to every weight in the gradient descent for L1 or L2 regularization, respectively:  
-$$C'(l, i, j)=
+$$
+C'(l, i, j)=
 \begin{cases}
 1,  & \text{if $w_l^{ij} \leq$ 0} \\
 -1, & \text{if $w_l^{ij}$ > 0}
-\end{cases}$$
+\end{cases}
+$$
 $$C'(l, i, j)=-2w_l^{ij}$$
 You may be wondering why parameter regularization is not applied to biases.
 ### Data Augmentation
