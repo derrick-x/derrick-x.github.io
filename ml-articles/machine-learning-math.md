@@ -22,7 +22,8 @@ permalink: /machine-learning-math/
     - [Words to Numbers](#words-to-numbers)
     - [Pay Attention](#pay-attention)
     - [Knowing Facts](#knowing-facts)
-    - [Transformers Conclusion](#transformers-conclusion)  
+    - [Transformers Conclusion](#transformers-conclusion)
+
 # Neural Networks
 Neural networks were one of the first examples of machine learning (besides maybe linear regression), and serves as a foundation for most modern models. What makes this data structure "neural" is its flexibility. A neural net is initialized with random\*, arbitrary parameters which can be adjusted through applying a learning process on training data. The edges (represented as lines) connecting every pair of neurons (represented as circles) in adjacent layers allow information to be passed to and interact with each other. In the diagram below, while there are four neurons in the first layer and two neurons in the last layer, the size and number of layers can vary depending on the application.
 
