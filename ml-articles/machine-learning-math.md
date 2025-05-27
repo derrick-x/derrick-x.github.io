@@ -28,6 +28,7 @@ permalink: /machine-learning-math/
         - [Final Attention Formula](#final-attention-formula)
         - [Multi-Headed Attention](#multi-headed-attention)
     - [Knowing Facts](#knowing-facts)
+        - [Multi-Layer Perceptron](#multi-layer-perceptron)
     - [Transformers Conclusion](#transformers-conclusion)
         - [Dimensions of Matrices](#dimensions-of-matrices)
         - [This Actually Works?](#this-actually-works)
@@ -132,6 +133,7 @@ If we join all the embedded vectors of the context as columns of a matrix, here 
 $$\text{Attention}(Q,K,V)=\text{softmax}(\frac{QK^T}{\sqrt{d_k}})V$$
 ### Multi-Headed Attention
 ## Knowing Facts
+### Multi-Layer Perceptron
 ## Transformers Conclusion
 ### Dimensions of Matrices
 ### This Actually Works?
