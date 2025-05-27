@@ -20,7 +20,12 @@ permalink: /machine-learning-math/
     - [Neural Networks Conclusion](#neural-networks-conclusion)
 - [Transformers](#transformers)
     - [Words to Numbers](#words-to-numbers)
+        - [Embedding Vectors](#embedding-vectors)
     - [Pay Attention](#pay-attention)
+        - [Query Matrix](#query-matrix)
+        - [Key Matrix](#key-matrix)
+        - [Value Matrix](#value-matrix)
+        - [Multi-Headed Attention](#multi-headed-attention)
     - [Knowing Facts](#knowing-facts)
     - [Transformers Conclusion](#transformers-conclusion)
 
