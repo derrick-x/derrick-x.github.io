@@ -129,5 +129,5 @@ $$\text{Attention}(q,k,v)=S(\frac{k^Tq}{\sqrt{d_k}})$$
 # Footnotes
 *\* Often, parameters are initialized using controlled random values such as with Kaiming He Initialization, to mitigate the gradient explosion problem*  
 *\*\* While this notation is more intuitive to think about, it may be more convenient to represent the edge as travelling backwards - $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l-1$$ neuron $$j$$ - for the purposes of computation*  
-*\*\*\* A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss*
-*\*\*\*\* Tokens do not necessarily represent full words - they might represent prefixes or suffixes like pre- or -tion. However, conceptually thinking about tokens as words is much simpler*
+*\*\*\* A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss*    
+*\*\*\*\* Tokens do not necessarily represent full words - they might represent prefixes or suffixes like pre- or -tion. However, it is simpler to conceptually think about tokens as words*
