@@ -128,7 +128,7 @@ The first of these matrices is the query matrix. This matrix is multiplied to ev
 The next matrix used in attention is the key matrix. Like with the query matrix, the key matrix is also multiplied to every vector to produce a list of key vectors. Key vectors are not exactly answers to queries, but more like how relevant the corresponding token to a query asked by another token. This "relevance" value is measured by the dot product of the query vector of one token with the key vector of another token. For example, in the query I gave above, the tokens "quick" and "brown" should have key vectors that have a high dot product with the query vector of "fox". The other tokens should have low dot products, indicating they aren't relevant to being adjectives of "fox".
 ### Value Matrix
 ### Final Attention Formula
-If we join 
+If we join all the embedded vectors of the context as columns of a matrix, here is the full formula for the shift applied to all entries from attention:
 $$\text{Attention}(Q,K,V)=\text{softmax}(\frac{QK^T}{\sqrt{d_k}})V$$
 ### Multi-Headed Attention
 ## Knowing Facts
