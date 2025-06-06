@@ -166,7 +166,7 @@ $$\frac{\delta C}{\delta a_i}=-\frac{1}{p_k}*\frac{\delta p_k}{\delta a_k}$$
 $$=-\frac{1}{p_k}*\frac{\delta}{\delta a_k}\frac{e^{a_k}}{\sum_{j=1}^n e^{a_j}}$$  
 $$=-\frac{1}{p_k}*\frac{(e^{a_k}\sum_{j=1}^n e^{a_j})-e^{2a_k}}{(\sum_{j=1}^n e^{a_j})^2}\text{(Chain rule and quotient rule)}$$  
 $$\text{Again, we can factor out a }p_k\text{ from the second fraction}$$  
-$$=-\frac{1}{p_k}*p_i*\frac{(\sum_{j=1}^n e^{a_j})-e^{a_k}}{\sum_{j=1}^n e^{a_j}}$$  
+$$=-\frac{1}{p_k}*p_k*\frac{(\sum_{j=1}^n e^{a_j})-e^{a_k}}{\sum_{j=1}^n e^{a_j}}$$  
 $$=-(\frac{\sum_{j=0}^n e^{a_j}}{\sum_{j=0}^n e^{a_j}}-\frac{e^{a_k}}{\sum_{j=0}^n e^{a_j}})$$  
 $$=p_k-1$$  
 Since any point of a (in this case, discrete) probability distribution can only take values between 0 and 1, we should expect $$p_i \mid i\neq k$$ to always be positive and $$ p_k $$ to always be negative. This makes sense because we always want to increase the probability of the correct prediction and decrease the probability of the incorrect prediction. Additionally, large values of $$p_i\mid i\neq k$$ affect the cost function more since confident incorrect predictions are more alarming and necessitate a more aggressive fix. Similarly, small values of $$p_k$$ have strong influence since confidently classifying the correct token as incorrect is problematic. The intermediary calculations look scary, but it actually simplifies quite a lot. Finding simple formulas like this is essential to optimizing performance of large models such as transformers. With appropriate masking[^6], we can now feed our model data from the internet and run backpropagation using the derived cost function derivatives.
