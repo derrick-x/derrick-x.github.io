@@ -22,9 +22,7 @@ permalink: /machine-learning-math/
     - [Words to Numbers](#words-to-numbers)
         - [Embedding Vectors](#embedding-vectors)
     - [Pay Attention](#pay-attention)
-        - [Query Matrix](#query-matrix)
-        - [Key Matrix](#key-matrix)
-        - [Value Matrix](#value-matrix)
+        - [Query, Key, and Value Matrices](#query-key-and-value-matrices)
         - [Final Attention Formula](#final-attention-formula)
         - [Multi-Headed Attention](#multi-headed-attention)
     - [Knowing Facts](#knowing-facts)
@@ -34,8 +32,8 @@ permalink: /machine-learning-math/
         - [Predicting a Token](#predicting-a-token)
         - [Cost Function](#cost-function)
     - [Transformers Conclusion](#transformers-conclusion)
-        - [Dimensions of Matrices](#dimensions-of-matrices)
-        - [This Actually Works?](#this-actually-works)
+        - [Dimensions of the Semantic Universe](#dimensions-of-the-semantic-universe)
+        - [Matrices and Dimensions Summary](#matrices-and-dimensions-summary)
 
 # Neural Networks
 Neural networks were one of the first examples of machine learning (besides maybe linear regression), and serves as a foundation for most modern models. What makes this data structure "neural" is its flexibility. A neural net is initialized with random[^1], arbitrary parameters which can be adjusted through applying a learning process on training data. The edges (represented as lines) connecting every pair of neurons (represented as circles) in adjacent layers allow information to be passed to and interact with each other. In the diagram below, while there are four neurons in the first layer and two neurons in the last layer, the size and number of layers can vary depending on the application.
@@ -127,11 +125,9 @@ Another property of these embedding vectors is that vectors can be added togethe
 ## Pay Attention
 A major difficulty with conversational bots is its ability to remember the past. Transformers take advantage of a revolutionary algorithm to remember context proposed by the paper *Attention is All You Need*, called attention. While recurrent neural networks were able to remember context, its processing mechanism was sequential, unable to be parallelized, and had very unstable gradients in the training process. Attention mitigates these issues, making it faster and more accurate for larger context sizes.  
 Visualize the input as a list of embedding vectors, representing a text sequence. For example, there might be 8 vectors representing the incomplete sentence "The quick brown fox jumps over the lazy". Attention assumes that every token could have some sort of influence on every other token, so we want to compute what those influences are and how to adjust the vectors to include its more refined contextual meaning. We create an nxn attention matrix to compare every pair of tokens. We then use three matrices to determine how their embedded vector entries should be updated.
-### Query Matrix
-The first of these matrices is the query matrix. This matrix is multiplied to every vector to produce a list of query vectors. Think of query vectors as a question that we want the corresponding token to ask of its context. In the example sentence, the token "fox" might have the query "are there any adjectives that change my definition?" The query matrix should be learned to produce these useful questions when applied to embedded vectors. Like with most machine-learned patterns, what the queries actually mean is often not understandable by humans.
-### Key Matrix
-The next matrix used in attention is the key matrix. Like with the query matrix, the key matrix is also multiplied to every vector to produce a list of key vectors. Key vectors are not exactly answers to queries, but more like how relevant the corresponding token to a query asked by another token. This "relevance" value is measured by the dot product of the query vector of one token with the key vector of another token. For example, in the query I gave above, the tokens "quick" and "brown" should have key vectors that have a high dot product with the query vector of "fox". The other tokens should have low dot products, indicating they aren't relevant to being adjectives of "fox". This table of dot products will be used to measure the "relevance" between tokens for that layer.[^6]
-### Value Matrix
+### Query, Key, and Value Matrices
+The first of these matrices is the query matrix. This matrix is multiplied to every vector to produce a list of query vectors. Think of query vectors as a question that we want the corresponding token to ask of its context. In the example sentence, the token "fox" might have the query "are there any adjectives that change my definition?" The query matrix should be learned to produce these useful questions when applied to embedded vectors. Like with most machine-learned patterns, what the queries actually mean is often not understandable by humans.  
+The next matrix used in attention is the key matrix. Like with the query matrix, the key matrix is also multiplied to every vector to produce a list of key vectors. Key vectors are not exactly answers to queries, but more like how relevant the corresponding token to a query asked by another token. This "relevance" value is measured by the dot product of the query vector of one token with the key vector of another token. For example, in the query I gave above, the tokens "quick" and "brown" should have key vectors that have a high dot product with the query vector of "fox". The other tokens should have low dot products, indicating they aren't relevant to being adjectives of "fox". This table of dot products will be used to measure the "relevance" between tokens for that layer.[^6]  
 Now, we have a table of dot products for every pair of tokens in the context window. The final step of attention is to figure out how to change the vectors to incorporate contextual meaning. This is calculated with a third matrix, the value matrix. This matrix is multiplied to every token to get the value vectors. Those vectors are then scaled by the dot products and added to the corresponding query tokens in the query-key token pairs. In the example of "quick brown fox", we take the value vectors of "quick" and "brown", multiply them by the dot products of their key vectors with the query vector of "fox", and add it to the embedding vector of "fox". The resulting "fox" vector should also somehow represent that it is quick and brown.
 ### Final Attention Formula
 Unlike the convention in pure linear algebra, where vectors are often represented as columns, transformer models represent each token’s embedding as a row in a matrix.
@@ -148,30 +144,58 @@ The feed-forward step from the input to the hidden layer is called the up-projec
 ### Down-Projection
 After applying a nonlinear normalization function (usually ReLU for its on/off feature) on the hidden layer, we apply another linear transformation to compute the output layer, just like in a neural network. Since the output layer is the same size as the input layer, which is much smaller than the hidden layer, the linear transformation maps a larger dimension to a smaller dimension, hence the name down-projection. The corresponding matrix would have many more columns than rows. In this matrix, think of the columns as representing vectors that can imbue facts into an embedding vector. The linear transformation scales each "fact vector" by its corresponding dot product and is added to the vector represented by the output layer. After scaling every fact vector by its corresponding dot product and adding it to the output, we get a vector that should be able to imbue all the relevant facts when added to the embedding vector.
 ## How Transformers Learn
-The learning process for transformers requires assessing how accurately the model predicts the next token. In the case of ChatGPT, the training data is content from the internet, and accuracy of predictions can be evaluated using what token actually came next at each position in the content versus what the model predicted should come next. However, the computation formulas and repetition processes are identical to those in backpropagation from neural networks.  
+The learning process for transformers requires assessing how accurately the model predicts the next token. In the case of ChatGPT, the training data is content from the internet, and accuracy of predictions can be evaluated using what token actually came next at each position in the content versus what the model predicted should come next. Also, instead of just adjusting some weights and biases, every entry of every matrix has an impact on the cost function. However, the computation formulas and repetition processes are identical to those in backpropagation from neural networks.  
 ### Predicting a Token
-First, it is important to understand how a transformer computes its prediction. At the end of the attention-MLP sequence, every vector is now richly imbued with factual and contextual information. We take the last embedding vector, representing the last token, and apply a linear transformation using the unembedding matrix. This matrix has a number of rows equal to the number of possible tokens, so it is probably much larger than the dimension of embedding space, or the number of columns. The resulting vector is then softmaxed to produce a probability distribution of all possible next tokens.
+First, it is important to understand how a transformer computes its prediction. At the end of the attention-MLP sequence, every vector is now richly imbued with factual and contextual information. We take the last embedding vector, representing the last token, and apply a linear transformation using the unembedding matrix. This matrix has a number of rows equal to the number of possible tokens, so it is probably much larger than the dimension of embedding space, or the number of columns. The resulting vector is then softmaxed to produce a probability distribution of all possible next tokens. The softmax function is defined as follows:  
+$$p_i=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}$$
 ### Cost Function
 Just like with recognizing handwritten digits using neural networks, transformers are trained by using real-world data and comparing the predicted next tokens with the expected next token at every token position. For large language models, cross-entropy loss is preferred over mean square error to define the cost function. Cross-entropy loss is defined as follows:  
 $$
-C=-\log{p_i}
+C=-\log{p_k}
+$$  
+In this equation, $$p_k$$ is the predicted probability of token $$k$$. We specify $$k$$ to be the index of the token that is expected to come next, so the expected value of $$p_k$$ should be 1, while all other $$p_i$$ are 0. While this formula seems to disregard the activations of all other outputs, they are actually indirectly considered through the definition of softmax. See the calculations (where I use the natural log for simplicity):  
 $$
-$$p_i$$ is the predicted probability of token $$i$$. We specify $$i$$ to be the index of the token that is expected to come next. While this formula seems to disregard the activations of all other outputs, they are actually indirectly considered through the definition of softmax. See the calculations (where I use the natural log for simplicity):
+p_i=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}
+\\\text{For all }i\neq k,
+\\\frac{\delta C}{\delta a_i}=-\frac{1}{p_k}*\frac{\delta p_k}{\delta a_k}
+\\=-\frac{1}{p_k}*\frac{\delta}{\delta a_i}\frac{e^{a_k}}{\sum_{j=1}^n e^{a_j}}
+\\=-\frac{1}{p_k}*-\frac{e^{a_k}e^{a_i}}{(\sum_{j=1}^n e^{a_j})^2}\text{(Chain rule and quotient rule)}
+\\\text{Recall that }p_i=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}\text{, and factor out a }p_k\text{ from the second fraction}
+\\=-\frac{1}{p_k}*p_k*-\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}
+\\=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}
+\\=p_i
+$$  
+The derivative the cost function with respect to $$p_k$$ is different than all other $$p_i$$. However, it can also be largely simplified:  
 $$
-p^i=\frac{e^{a^_i}}{\sum_{j=1}^n e^{a_j}}
-\frac{\delta C}{\delta p_i}
-$$
+\\\frac{\delta C}{\delta a_i}=-\frac{1}{p_k}*\frac{\delta p_k}{\delta a_k}
+\\=-\frac{1}{p_k}*\frac{\delta}{\delta a_k}\frac{e^{a_k}}{\sum_{j=1}^n e^{a_j}}
+\\=-\frac{1}{p_k}*\frac{(e^{a_k}\sum_{j=1}^n e^{a_j})-e^{2a_k}}{(\sum_{j=1}^n e^{a_j})^2}\text{(Chain rule and quotient rule)}
+\\\text{Again, we can factor out a }p_k{ from the second fraction}
+\\=-\frac{1}{p_k}*p_i*\frac{(\sum_{j=1}^n e^{a_j})-e^{a_k}}{\sum_{j=1}^n e^{a_j}}
+\\=-(\frac{\sum_{j=0}^n e^{a_j}}{\sum_{j=0}^n e^{a_j}}-\frac{e^{a_k}}{\sum_{j=0}^n e^{a_j}})
+\\=p_k-1
+$$  
+Since any point of a (in this case, discrete) probability distribution can only take values between 0 and 1, we should expect $$p_i \mid i\neq k$$ to always be positive and $$ p_k $$ to always be negative. This makes sense because we always want to increase the probability of the correct prediction and decrease the probability of the incorrect prediction. Additionally, large values of $$p_i\mid i\neq k$$ affect the cost function more since confident incorrect predictions are more alarming and necessitate a more aggressive fix. Similarly, small values of $$p_k$$ have strong influence since confidently classifying the correct token as incorrect is problematic. The intermediary calculations look scary, but it actually simplifies quite a lot. Finding simple formulas like this is essential to optimizing performance of large models such as transformers. With appropriate masking[^6], we can now feed our model data from the internet and run backpropagation using the derived cost function derivatives.
 ## Transformers Conclusion
 Transformers are a key step forward in many machine learning areas such as natural language processing. Building off the foundation of neural networks, the carefully-designed architecture and flexibility of transformers allows it to effectively create the illusion of generating new content, remembering relevant information, and understanding data in context - all from simply predicting the next token. The model is also designed with performance in mind, exploiting matrix multiplications and other independent computations extensively to maximize parallel processing potential.
 ### Dimensions of the Semantic Universe
 What I found interesting learning about transformers the first time was the dimensions. GPT-3 uses ~13k dimensions for the embedding space and ~52k dimensions for the fact space. Despite this being many more dimensions than we can visualize, I initially thought there's no way a machine can accurately capture the semantic universe in a reasonable amount of dimensions, and certiainly not every fact that has ever existed on the internet.  
 There is a mathematical explanation to this. To represent independent meanings or facts, we need orthogonal vectors, which won't affect each other when added. While a vector space of $$n$$ dimensions can only contain $$n$$ orthogonal vectors, we can actually pack in more if we allow these vectors to be "nearly orthogonal" - maybe between 89 and 91 degrees from each other. In 3 dimensions, this doesn't give us much freedom to squeeze in more vectors, so it's hard to visualize how this slight wiggle room helps us. But interestingly, the number of nearly orthogonal vectors that can be packed into a vector space grows expnentially in terms of the dimension space. For example, you can fit nearly 100,000 vectors, all between 89 and 91 degrees of each other, using just 100 dimensions!  
 Consequently, layers within a transformer rarely have distinct entries, but rather a blur of values, since these "idea vectors" are all somewhat blurred with each other. But it could also be due to how meaning is structured. Our semantic universe doesn't really have any completely independent ideas that scale linearly. There's almost always a way to find a way that two ideas are related. Perhaps this is one aspect that transformers can take advantage of to capture some approximation of all ideas using a limited number of dimensions.  
-### Matrices Summary
+### Matrices and Dimensions Summary
+There are four matrices used in transformers. Here are their dimensions in row x column format:
+$$
+\text{Query matrix: }c\times e
+\\\text{Key matrix: }c\times e
+\\\text{Value matrix: }e\times e
+\\\text{Fact matrix: }f\times e
+\\ c<e<f
+$$
+The inequality shows the relations of dimension sizes, where $$c$$ is dimension of the "contextualization space", the vector space used to find meaningful contextual questions and answers. $$e$$ is the "embedding space", the vector space used to define a token's meaning. $$f$$ is the dimension of the "fact space", the vector space that, in theory, somehow stores every fact the transformer appears to know.
 # Footnotes
 [^1]: Often, parameters are initialized using controlled random values such as with Kaiming He Initialization, to mitigate the gradient explosion problem  
 [^2]: While this notation is more intuitive to think about, it may be more convenient to represent the edge as travelling backwards - $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l-1$$ neuron $$j$$ - for the purposes of computation  
-[^3]: As you will see in the transformers section, mean square error is not the only way to define a cost function.
+[^3]: As you will see in the transformers section, mean square error is not the only way to define a cost function
 [^4]: A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss  
 [^5]: Tokens do not necessarily represent full words - they might represent prefixes or suffixes like pre- or -tion. However, it is simpler to conceptually think about tokens as words  
-[^6]: In the case of large language models, it is often helpful to set all entries representing query tokens that came before key tokens to zero, called masking. This prevents the transformer from "cheating" by referencing future content during the training process.
+[^6]: In the case of large language models, it is often helpful to set all entries representing query tokens that came before key tokens to zero, called masking. This prevents the transformer from "cheating" by referencing future content during the training process
