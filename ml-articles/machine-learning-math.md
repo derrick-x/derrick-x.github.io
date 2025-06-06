@@ -153,25 +153,25 @@ C=-\log{p_k}
 $$  
 In this equation, $$p_k$$ is the predicted probability of token $$k$$. We specify $$k$$ to be the index of the token that is expected to come next, so the expected value of $$p_k$$ should be 1, while all other $$p_i$$ are 0. While this formula seems to disregard the activations of all other outputs, they are actually indirectly considered through the definition of softmax. See the calculations (where I use the natural log for simplicity):  
 $$
-p_i=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}
-\\\text{For all }i\neq k,
-\\\frac{\delta C}{\delta a_i}=-\frac{1}{p_k}*\frac{\delta p_k}{\delta a_k}
-\\=-\frac{1}{p_k}*\frac{\delta}{\delta a_i}\frac{e^{a_k}}{\sum_{j=1}^n e^{a_j}}
-\\=-\frac{1}{p_k}*-\frac{e^{a_k}e^{a_i}}{(\sum_{j=1}^n e^{a_j})^2}\text{(Chain rule and quotient rule)}
-\\\text{Recall that }p_i=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}\text{, and factor out a }p_k\text{ from the second fraction}
-\\=-\frac{1}{p_k}*p_k*-\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}
-\\=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}
-\\=p_i
+p_i=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}\\
+\text{For all }i\neq k,\\
+\frac{\delta C}{\delta a_i}=-\frac{1}{p_k}*\frac{\delta p_k}{\delta a_k}\\
+=-\frac{1}{p_k}*\frac{\delta}{\delta a_i}\frac{e^{a_k}}{\sum_{j=1}^n e^{a_j}}\\
+=-\frac{1}{p_k}*-\frac{e^{a_k}e^{a_i}}{(\sum_{j=1}^n e^{a_j})^2}\text{(Chain rule and quotient rule)}\\
+\text{Recall that }p_i=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}\text{, and factor out a }p_k\text{ from the second fraction}\\
+=-\frac{1}{p_k}*p_k*-\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}\\
+=\frac{e^{a_i}}{\sum_{j=1}^n e^{a_j}}\\
+=p_i
 $$  
 The derivative the cost function with respect to $$p_k$$ is different than all other $$p_i$$. However, it can also be largely simplified:  
 $$
-\\\frac{\delta C}{\delta a_i}=-\frac{1}{p_k}*\frac{\delta p_k}{\delta a_k}
-\\=-\frac{1}{p_k}*\frac{\delta}{\delta a_k}\frac{e^{a_k}}{\sum_{j=1}^n e^{a_j}}
-\\=-\frac{1}{p_k}*\frac{(e^{a_k}\sum_{j=1}^n e^{a_j})-e^{2a_k}}{(\sum_{j=1}^n e^{a_j})^2}\text{(Chain rule and quotient rule)}
-\\\text{Again, we can factor out a }p_k{ from the second fraction}
-\\=-\frac{1}{p_k}*p_i*\frac{(\sum_{j=1}^n e^{a_j})-e^{a_k}}{\sum_{j=1}^n e^{a_j}}
-\\=-(\frac{\sum_{j=0}^n e^{a_j}}{\sum_{j=0}^n e^{a_j}}-\frac{e^{a_k}}{\sum_{j=0}^n e^{a_j}})
-\\=p_k-1
+\frac{\delta C}{\delta a_i}=-\frac{1}{p_k}*\frac{\delta p_k}{\delta a_k}\\
+=-\frac{1}{p_k}*\frac{\delta}{\delta a_k}\frac{e^{a_k}}{\sum_{j=1}^n e^{a_j}}\\
+=-\frac{1}{p_k}*\frac{(e^{a_k}\sum_{j=1}^n e^{a_j})-e^{2a_k}}{(\sum_{j=1}^n e^{a_j})^2}\text{(Chain rule and quotient rule)}\\
+\text{Again, we can factor out a }p_k\text{ from the second fraction}\\
+=-\frac{1}{p_k}*p_i*\frac{(\sum_{j=1}^n e^{a_j})-e^{a_k}}{\sum_{j=1}^n e^{a_j}}\\
+=-(\frac{\sum_{j=0}^n e^{a_j}}{\sum_{j=0}^n e^{a_j}}-\frac{e^{a_k}}{\sum_{j=0}^n e^{a_j}})\\
+=p_k-1
 $$  
 Since any point of a (in this case, discrete) probability distribution can only take values between 0 and 1, we should expect $$p_i \mid i\neq k$$ to always be positive and $$ p_k $$ to always be negative. This makes sense because we always want to increase the probability of the correct prediction and decrease the probability of the incorrect prediction. Additionally, large values of $$p_i\mid i\neq k$$ affect the cost function more since confident incorrect predictions are more alarming and necessitate a more aggressive fix. Similarly, small values of $$p_k$$ have strong influence since confidently classifying the correct token as incorrect is problematic. The intermediary calculations look scary, but it actually simplifies quite a lot. Finding simple formulas like this is essential to optimizing performance of large models such as transformers. With appropriate masking[^6], we can now feed our model data from the internet and run backpropagation using the derived cost function derivatives.
 ## Transformers Conclusion
@@ -183,11 +183,11 @@ Consequently, layers within a transformer rarely have distinct entries, but rath
 ### Matrices and Dimensions Summary
 There are four matrices used in transformers. Here are their dimensions in row x column format:
 $$
-\text{Query matrix: }c\times e
-\\\text{Key matrix: }c\times e
-\\\text{Value matrix: }e\times e
-\\\text{Fact matrix: }f\times e
-\\ c<e<f
+\text{Query matrix: }c\times e\\
+\text{Key matrix: }c\times e\\
+\text{Value matrix: }e\times e\\
+\text{Fact matrix: }f\times e\\
+ c<e<f
 $$
 The inequality shows the relations of dimension sizes, where $$c$$ is dimension of the "contextualization space", the vector space used to find meaningful contextual questions and answers. $$e$$ is the "embedding space", the vector space used to define a token's meaning. $$f$$ is the dimension of the "fact space", the vector space that, in theory, somehow stores every fact the transformer appears to know.
 # Footnotes
