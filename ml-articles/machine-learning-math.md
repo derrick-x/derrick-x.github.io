@@ -180,7 +180,7 @@ Consequently, layers within a transformer rarely have distinct entries, but rath
 There are four matrices used in transformers. Here are their dimensions in row x column format:  
 $$\text{Query matrix: }c\times e$$  
 $$\text{Key matrix: }c\times e$$  
-##\text{Value matrix: }e\times e$$  
+$$\text{Value matrix: }e\times e$$  
 $$\text{Fact matrix: }f\times e$$  
 $$c<e<f$$  
 The inequality shows the relations of dimension sizes, where $$c$$ is dimension of the "contextualization space", the vector space used to find meaningful contextual questions and answers. $$e$$ is the "embedding space", the vector space used to define a token's meaning. $$f$$ is the dimension of the "fact space", the vector space that, in theory, somehow stores every fact the transformer appears to know.
