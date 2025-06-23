@@ -13,7 +13,8 @@ permalink: /machine-learning-math/
         - [Iterating Backwards](#iterating-backwards)
     - [Neural Networks Conclusion](#neural-networks-conclusion)
 - [Transformers](#transformers)
-    - [Words to Numbers](#words-to-numbers)
+    - [A Machine's Vocabulary](#a-machines-vocabulary)
+        - [Tokenization](#tokenization)
         - [Embedding Vectors](#embedding-vectors)
     - [Pay Attention](#pay-attention)
         - [Query, Key, and Value Matrices](#query-key-and-value-matrices)
@@ -84,10 +85,30 @@ With neural networks, we have a unique data structure with flexible parameters, 
 # Transformers
 While neural networks are great at multiple choice, (evaluation tasks such as picking a recommended video) they struggle to generate content. Transformers were proposed to solve this task. By predicting the next word, pixel, or wave (we will call these segments of content "tokens") to come next, transformers give the illusion of original generation. They are used for modern tasks such as natural language processing, computer vision, reinforcement learning, and other tasks that are simply too complex for neural networks alone to be practical. A popular example is ChatGPT (GPT stands for Generative Pre-trained Transformer), which can mimic conversations using data from the internet.  
 Interestingly, transformers were not the first machine learning architecture proposed for these tasks. Other models, such as recurrent neural networks, have been used, but transformers are have higher performance and more parallelizable, cutting training and computing time cost. Transformers use multiple layers to allow for deeper learning, just like neural networks, but what these layers do is more complex. In this section, I will mainly base my discussion around the model that powers ChatGPT as it is a very popular example of a transformer.
-## Words to Numbers
+## A Machine's Vocabulary
 Computers love programming languages, but have a hard time understanding natural languages. Language is imprecise, has culture weaved into it, and can change meaning depending on the context. The word "queen", for example, can represent a royal figure or a chess piece. Adjectives before nouns can also drastically change meaning. In short, it is difficult, if not impossible, to convert natural language to a language computers can understand.
+### Tokenization
+The first problem is that a machine can't really recognize words or sentences - it only understands input as a sequence of bytes, or characters. For the best efficiency, we want the machine to recognize separate pieces of the input as modules of meaning, called tokens, and be able to regenerate these when it produces new content.[^6] You may be tempted to just separate all the training content by spaces and make each substring a token in the machine's vocabulary. However, this causes some problems, when you consider other characters like punctuation, quotations, and brackets. These symbols can be accounted for, but we also want the model to recognize prefixes and suffixes, such as "un-" and "-tion", as well as maybe tenses. Defining tokens as words is okay, but we can better define the vocabulary to help the model understand meaning a little more.  
+Feeding the model every prefix and suffix in the English language is tedious. It also won't incorporate abbreviations, slangs, or other languages. There are several approaches to tokenization that allows the machine to automatically find these subwords that would be good tokens. One method is Byte-Pair Encoding, an algorithm used by GPT-2. The algorithm is as follows:
+1. Scan input for all characters and add them to the set of current tokens
+2. Scan input and match with longest tokens possible
+3. Find frequency of all adjacent tokens
+4. Add the adjacent token pair occuring most to the set of current tokens
+5. Loop back to step 2 until set size reaches desired limit  
+
+As you can see, this algorithm adds not only the individual characters but also the most common substrings to the vocabulary, since those are most likely to be good tokens. With this process, we (hopefully) give the model pieces of words that can have meaningful distinct semantics for it to learn and (hopefully) the model can accurately stitch them together to produce valid output. Here's the Python code for the algorithm if you are curious:  
+```
+def getTokens(input: str) -> set[str]:
+```
+And Java code if you're a psychopath like me:
+```
+public HashSet<String> getTokens(String input) {
+
+}
+```
+For simplicity, I will make the assumption that all tokens are words.
 ### Embedding Vectors
-Nevertheless, we can approximate meanings. We want to convert words to tokens[^6], which have associated embedding vectors. These vectors have very high dimension (>10,000 in GPT-3) because we want to be able to somehow capture the entire semantic universe into a list of numbers. Imagine a high-dimensional space (which I like to call the semantic universe) where each axis represents an idea. Maybe one axis is the "color" axis, where embedding vectors of words that are associated with different colors have different entries in that dimensions. Another axis could be the "temperature" axis, another being the "agreeable" axis, and so on, until we can approximate every point in the semantic universe with a vector. However, just like how the patterns a neural network learns is rarely understandable to humans, the meanings of each dimension that a transformer learns usually does not makes sense.  
+With tokens defined, we want to somehow assign numbers to these tokens. We give the tokens embedding vectors, which you can think of as a list of numbers or an arrow pointing in some direction with some length. These vectors have very high dimension (>10,000 in GPT-3) because we want to be able to somehow capture the entire semantic universe into a list of numbers. Imagine a high-dimensional space (which I like to call the semantic universe) where each axis represents an idea. Maybe one axis is the "color" axis, where embedding vectors of words that are associated with different colors have different entries in that dimensions. Another axis could be the "temperature" axis, another being the "agreeable" axis, and so on, until we can approximate every point in the semantic universe with a vector. However, just like how the patterns a neural network learns is rarely understandable to humans, the meanings of each dimension that a transformer learns usually does not makes sense.  
 Another property of these embedding vectors is that vectors can be added together to represent compounded ideas. Suppose $$v_1$$ represents the embedding vector associated with the word "mother", $$v_2$$ represents "father", $$v_3$$ represents "uncle", and $$v_4$$ represents "aunt". $$v_1-v_2$$, the difference between "mother" and "father", is very close to $$v_3-v_4$$, the difference between "uncle" and "aunt". This suggests that the vector $$v_1-v_2$$ can somehow convert masculine words to their feminine counterpart when added to an embedding vector. It also suggests that our complex semantic universe, despite having far more dimensions than we can visualize, is somehow quantifiable with linear algebra? And how could a mere 10,000 dimensions possibly achieve this? I found this strange and slightly unsettling when I learned about it. I'll return to this point at the end of the section.
 ## Pay Attention
 A major difficulty with conversational bots is its ability to remember the past. Transformers take advantage of a revolutionary algorithm to remember context proposed by the paper *Attention is All You Need*, called attention. While recurrent neural networks were able to remember context, its processing mechanism was sequential, unable to be parallelized, and had very unstable gradients in the training process. Attention mitigates these issues, making it faster and more accurate for larger context sizes.  
@@ -159,5 +180,5 @@ The inequality shows the relations of dimension sizes, where $$c$$ is dimension 
 [^3]: As you will see in the transformers section, mean square error is not the only way to define a cost function
 [^4]: A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss  
 [^5]: There is a lot more to say about how the training process is conducted, such as techniques to prevent overfitting, but those discussions are more within the data science field
-[^6]: Tokens do not necessarily represent full words - they might represent prefixes or suffixes like pre- or -tion. However, it is simpler to conceptually think about tokens as words  
+[^6]: It actually is possible to treat every character as a token. However, this makes it much more difficult for the machine to understand longer sections of text, and hence is rarely used.  
 [^7]: In the case of large language models, it is often helpful to set all entries representing query tokens that came before key tokens to zero, called masking. This prevents the transformer from "cheating" by referencing future content during the training process
