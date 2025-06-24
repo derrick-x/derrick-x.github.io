@@ -91,6 +91,7 @@ public class Main {
                 }
                 curr = curr.children.get(tokens[i].charAt(j));
             }
+            curr.id = i;
             curr.isWord = true;
         }
         return root;

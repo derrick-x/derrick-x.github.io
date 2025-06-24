@@ -73,6 +73,7 @@ def getTrie(tokens: list[str]) -> Trie:
                 next = Trie(i)
                 curr.children[char] = next
             curr = curr.children[char]
+        curr.id = i
         curr.isWord = True
     return root
 
