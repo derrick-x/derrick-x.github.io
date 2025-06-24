@@ -163,15 +163,15 @@ There are four matrices used in transformers. Here are their dimensions in row x
 $$\text{Query matrix: }c\times e$$  
 $$\text{Key matrix: }c\times e$$  
 $$\text{Value matrix: }e\times e$$  
-$$\text{Fact matrix: }f\times e$$
+$$\text{Fact matrix: }f\times e$$  
 $$c<e<f$$  
 The inequality shows the relations of dimension sizes, where $$c$$ is dimension of the "contextualization space", the vector space used to find meaningful contextual questions and answers. $$e$$ is the "embedding space", the vector space used to define a token's meaning. $$f$$ is the dimension of the "fact space", the vector space that, in theory, somehow stores every fact the transformer appears to know.
 # Sources
 # Footnotes
-[^1]: Often, parameters are initialized using controlled random values such as with Kaiming He Initialization, to mitigate the gradient explosion problem  
-[^2]: While this notation is more intuitive to think about, it may be more convenient to represent the edge as travelling backwards - $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l-1$$ neuron $$j$$ - for the purposes of computation  
-[^3]: As you will see in the transformers section, mean square error is not the only way to define a cost function
-[^4]: A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss  
-[^5]: There is a lot more to say about how the training process is conducted, such as techniques to prevent overfitting, but those discussions are more within the data science field
-[^6]: It actually is possible to treat every character as a token. However, this makes it much more difficult for the machine to understand longer sections of text, and hence is rarely used.  
-[^7]: In the case of large language models, it is often helpful to set all entries representing query tokens that came before key tokens to zero, called masking. This prevents the transformer from "cheating" by referencing future content during the training process
+[^1]: Often, parameters are initialized using controlled random values such as with Kaiming He Initialization, to mitigate the gradient explosion problem.
+[^2]: While this notation is more intuitive to think about, it may be more convenient to represent the edge as travelling backwards - $${w_l}^{ij}$$ is the weight of the edge connecting layer $$l$$ neuron $$i$$ to layer $$l-1$$ neuron $$j$$ - for the purposes of computation.
+[^3]: As you will see in the transformers section, mean square error is not the only way to define a cost function.
+[^4]: A trick called stochastic gradient descent is often employed to significantly improve computation cost for only a marginal accuracy loss.
+[^5]: There is a lot more to say about how the training process is conducted, such as techniques to prevent overfitting, but those discussions are more within the data science field.
+[^6]: It actually is valid to treat every character as a token. In fact, this significantly reduces vocabulary size. However, this makes it much more difficult for the machine to understand longer sections of text, and hence is rarely used.
+[^7]: In the case of large language models, it is often helpful to set all entries representing query tokens that came before key tokens to zero, called masking. This prevents the transformer from "cheating" by referencing future content during the training process.
