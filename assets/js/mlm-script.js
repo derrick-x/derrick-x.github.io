@@ -3,7 +3,7 @@ const ctxFF = undefined;
 window.onload = function() {
     console.log("success!");
     const canvasFF = document.getElementById("feed-forward");
-    print(canvasFF);
+    console.log(canvasFF);
     ctxFF = canvasFF.getContext("2d");
     drawFeedForward();
 }
