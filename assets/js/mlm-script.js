@@ -1,9 +1,10 @@
-const ff = 0;
+const ctxFF = undefined;
 
 window.onload = function() {
     console.log("success!");
     const canvasFF = document.getElementById("feed-forward");
-    const ctxFF = canvasFF.getContext("2d");
+    print(canvasFF);
+    ctxFF = canvasFF.getContext("2d");
     drawFeedForward();
 }
 
