@@ -2,14 +2,14 @@ const ctxFF = undefined;
 
 window.onload = function() {
     console.log("success!");
-    const canvasFF = document.getElementById("feed-forward");
+    const canvasFF = document.getElementById("ff");
     console.log(canvasFF);
     ctxFF = canvasFF.getContext("2d");
     drawFeedForward();
 }
 
 function drawFeedForward() {
-    ctxFF.fillStyle = "rgb(0, 0, 0)";
+    ctxFF.fillStyle = "rgb(255, 0, 0)";
     ctxFF.fillRect(0, 0, 500, 300);
 }
 
