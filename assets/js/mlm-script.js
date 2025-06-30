@@ -1,16 +1,20 @@
+const ff = 0;
+
 window.onload = function() {
     console.log("success!");
-    const ctx = [document.getElementById("feed-forward").getContext("2d")];
+    const canvasFF = document.getElementById("feed-forward");
+    const ctxFF = canvasFF.getContext("2d");
+    drawFeedForward();
 }
 
-function drawFeedForward(id) {
-    ctx[id].fillStyle = "rgb(0, 0, 0)";
-    ctx[id].fillRect(0, 0, 500, 300);
+function drawFeedForward() {
+    ctxFF.fillStyle = "rgb(0, 0, 0)";
+    ctxFF.fillRect(0, 0, 500, 300);
 }
 
-function drawBackpropagation(id) {
+function drawBackpropagation() {
 }
 
-function drawTokenization(id) {
+function drawTokenization() {
 
 }
