@@ -1,11 +1,9 @@
 window.onload = function() {
-    const canvasFF = document.getElementById("ff");
-    const ctxFF = canvasFF.getContext("2d");
     loop();
 }
 
 function loop() {
-    const canvas = document.getElementById("canvas");
+    const canvas = document.getElementById("ff");
     const ctx = canvas.getContext("2d");
     drawFF(ctx);
     requestAnimationFrame(loop);
